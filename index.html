@@ -155,7 +155,7 @@
                 <table id="tablaMaestra" class="table table-hover w-100">
                     <thead>
                         <tr>
-                            <th>Cuenta</th> <th>QR</th> <th>OLT</th> <th>FSP</th> <th>Lat</th> <th>Lon</th> <th>Ubicación</th> <th>Puerto N2</th> <th>Estatus</th> <th>Columna 10</th>
+                            <th>Cuenta</th> <th>QR</th> <th>OLT</th> <th>FSP</th> <th>Ancho de Banda</th> <th>Latitud</th> <th>Longitud</th> <th>Ubicación</th> <th>Puerto N2</th> <th>Estatus</th>
                         </tr>
                     </thead>
                 </table>
@@ -196,7 +196,7 @@
                     <table id="tablaResultados" class="table table-hover w-100">
                         <thead>
                             <tr>
-                                <th>Cuenta</th> <th>QR</th> <th>OLT</th> <th>FSP</th> <th>Lat</th> <th>Lon</th> <th>Estatus</th> <th>Clientes en QR</th> <th>Columna 10</th>
+                                <th>Cuenta</th> <th>QR</th> <th>OLT</th> <th>FSP</th> <th>Ancho de Banda</th> <th>Latitud</th> <th>Longitud</th> <th>Ubicación</th> <th>Puerto N2</th> <th>Estatus</th> <th>Clientes en QR</th>
                             </tr>
                         </thead>
                         <tbody id="bodyResultados"></tbody>
@@ -314,9 +314,9 @@
                             dom: 'rtip',
                             pageLength: 18,
                             language: { "info": "Mostrando _TOTAL_ registros", "paginate": { "next": "Sig", "previous": "Ant" } },
-                            columnDefs: [{ targets: 8, defaultContent: "ACTIVA" }],
+                            columnDefs: [{ targets: 9, defaultContent: "LIBRE" }],
                             createdRow: function(row, data, dataIndex) {
-                                var estatus = (data[8] || "").toUpperCase().trim();
+                                var estatus = (data[9] || "").toUpperCase().trim();
                                 if (estatus === "CANCELADA") $(row).addClass('fila-cancelada');
                                 else if (estatus === "INACTIVA") $(row).addClass('fila-inactiva');
                             }
@@ -380,25 +380,27 @@
                 var d = datosIndexados[cuenta];
                 if (d) {
                     encontrados++;
-                    var est = (d[8] || "ACTIVA").toUpperCase().trim();
+                    var est = (d[9] || "LIBRE").toUpperCase().trim();
                     var qrCount = conteoQR[d[1]] || 0;
                     var badgeClass = qrCount >= 5 ? 'qr-hot' : (qrCount >= 3 ? 'qr-warm' : 'qr-normal');
                     var rowCl = (est === "CANCELADA") ? "fila-cancelada" : (est === "INACTIVA" ? "fila-inactiva" : "");
 
                     html += `<tr class="${rowCl}">
-                        <td><strong>${cuenta}</strong></td>
-                        <td><span class="qr-badge ${badgeClass}">${d[1]}</span></td>
-                        <td>${d[2]}</td>
-                        <td>${d[3]}</td>
+                        <td><strong>${d[0] || ''}</strong></td>
+                        <td><span class="qr-badge ${badgeClass}">${d[1] || ''}</span></td>
+                        <td>${d[2] || ''}</td>
+                        <td>${d[3] || ''}</td>
                         <td>${d[4] || ''}</td>
                         <td>${d[5] || ''}</td>
+                        <td>${d[6] || ''}</td>
+                        <td>${d[7] || ''}</td>
+                        <td>${d[8] || ''}</td>
                         <td>${est}</td>
                         <td>${qrCount}</td>
-                        <td>${d[9] || ''}</td>
                     </tr>`;
                 } else {
                     noEncontrados++;
-                    html += `<tr class="not-found"><td>${cuenta}</td><td colspan="8">NO ENCONTRADO EN BASE</td></tr>`;
+                    html += `<tr class="not-found"><td>${cuenta}</td><td colspan="10">NO ENCONTRADO EN BASE</td></tr>`;
                 }
             });
 
